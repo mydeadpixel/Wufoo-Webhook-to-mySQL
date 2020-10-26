@@ -13,10 +13,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$miles = mysqli_real_escape_string($con, $_POST['Field2']);
 		$EntryId = mysqli_real_escape_string($con, $_POST['EntryId']);
 
-		$sql="INSERT INTO totalMilesDB (name, miles, EntryId)
-		VALUES ('$name', '$miles', '$EntryId')";
-		
-		if (!mysqli_query($con,$sql)) { die('Error: ' . mysqli_error($con)); }
+		$stmt = $con->prepare("INSERT INTO totalMilesDB (name, miles, EntryId)VALUES (?,?,?)");
+		$stmt->bind_param("sss", $name, $miles, $EntryId);
+		if (!$stmt->execute()) { die('Error: ' . mysqli_error($con)); }
 		mysqli_close($con);
 	}
 
